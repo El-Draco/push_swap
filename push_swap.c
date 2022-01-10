@@ -404,9 +404,31 @@ int main(int argc, char **argv)
     //  stack_init(&a, argc, &argv);
     int i;
 
-    i = argc;
-    while (--i >= 1)
-        push(&a, atoi(argv[i]));
+    //i = argc;
+    //while (--i >= 1)
+    //    push(&a, atoi(argv[i]));
+
+    int count = 0;
+    int len = ft_strlen(argv[1]);
+    int x;
+    int j;
+    char *s = argv[1];
+    i = 0;
+    while (i < len)
+    {
+        j = i;
+        while (s[j] != ' ')
+            j++;
+        x = atoi(s+i);
+        i = j+1;
+        push(&b, x);
+    }
+    while (b)
+    {
+        push_to(&a,&b);
+    }
+    
+    //goose
 
     // display_stack(&a);
 
@@ -421,7 +443,7 @@ int main(int argc, char **argv)
     // display_stack(&b);
 
     // a = push_swap(a, 6);
-    push_swap(&a, &b, argc-1);
+    //push_swap(&a, &b, argc-1);
     //display_stack(&a);
     return 0;
 }
