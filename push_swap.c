@@ -54,6 +54,8 @@ void display_stack(stack *s)
 {
     struct node *ptr;
 
+    if (!*s)
+        printf("NULL\n");
     ptr = *s;
     while (ptr)
     {
@@ -113,7 +115,6 @@ void rotate(stack *s)
 {
     struct node *temp;
     struct node *ptr;
-
     if (!*s || !(*s)->next)
         return;
     temp = *s;
@@ -167,26 +168,26 @@ void push_to(stack *dest, stack *src)
     // pop(src);
 }
 
-void sort_stack(stack *a, stack *b)
-{
-    int a_top;
+// void sort_stack(stack *a, stack *b)
+// {
+//     int a_top;
 
-    while (*a)
-    {
-        a_top = (*a)->val;
-        if (*b == NULL || a_top < (*b)->val)
-            push_to(b, a);
-        else
-        {
-            pop(a);
-            while (a_top > (*b)->val)
-                push_to(a, b);
-            push(b, a_top);
-        }
-        *a = (*a)->next;
-    }
-}
-
+//     while (*a)
+//     {
+//         a_top = (*a)->val;
+//         if (*b == NULL || a_top < (*b)->val)
+//             push_to(b, a);
+//         else
+//         {
+//             pop(a);
+//             while (a_top > (*b)->val)
+//                 push_to(a, b);
+//             push(b, a_top);
+//         }
+//         *a = (*a)->next;
+//     }
+// }
+/*
 void merge_stacks(stack *a, int a_count, stack *b)
 {
     int count;
@@ -215,7 +216,7 @@ void merge_stacks(stack *a, int a_count, stack *b)
         {
             push_to(a,b);
         }
-        
+
         else
         {
             while (++i < count)
@@ -235,11 +236,6 @@ void copy_stack(stack *dest, stack *src, int n)
     int i;
 
     i = 0;
-    while (/* condition */)
-    {
-        /* code */
-    }
-    
 }
 
 stack actual_push_swap(stack a, int n)
@@ -248,8 +244,7 @@ stack actual_push_swap(stack a, int n)
     int half;
     int i;
 
-    //here we duplicate stacks:
-
+    // here we duplicate stacks:
 
     b = NULL;
     // base case:
@@ -271,28 +266,139 @@ stack actual_push_swap(stack a, int n)
     }
     return a;
 }
+*/
 
-void push_swap(stack *a, int n)
+// void push_swap(stack *a, int n)
+// {
+//     struct node *ptr;
+//     if (n <= 1)
+//         return;
+//     int middle;
+//     int i;
+
+//     i = 0;
+//     middle = (n + 1) / 2;
+//     while (++i <= middle)
+
+//         push_swap2((*a)->next, middle);
+// }
+
+void sort(stack *a, stack *b, int n)
 {
-    struct node *ptr;
-    if (n <=1)
-        return ;
-    int middle;
     int i;
+    int count;
+    int largest;
+    struct node *b_ptr;
+    count = 0;
+    largest = (*a)->val;
+    while (*b)
+    {
+        count = 0;
+        b_ptr = *b;
+        i = 0;
+        if ((*a)->val > (*b)->val)
+        {
+            printf("push a\n");
+            push_to(a, b);
+            n--;
+        }
+        else
+        {
+            while (b_ptr && (*a)->val < b_ptr->val)
+            {
+                b_ptr = b_ptr->next;
+                count++;
+            }
+            if (count == n && (*a)->val == largest)
+            {
+                largest = (*b)->val;
+                rotate(a);
+                printf("ra\n");
 
-    i = 0;
-    middle = (n+1)/2;
-    while (++i <= middle)
-        
-    
-    push_swap2((*a)->next, middle);
+                push_to(a, b);
+                printf("push a\n");
 
+                n--;
+            }
+            else if (count == n && (*a)->next) // correct placement:
+            {
+                rotate(a);
+                printf("ra\n");
+            }
+            else if (count == n)
+            {
+                push_to(a, b);
+                printf("push a\n");
+                n--;
+            }
+            else
+            {
+                if (count <= n / 2) // rotate  up
+                {
+                    while (++i <= count)
+                    {
+                        rotate(b);
+                        printf("rb\n");
+                    }
+                    push_to(a, b);
+                    printf("push a\n");
+                    n--;
+                }
+                else // rev_rotate
+                {
+                    while (++i <= count)
+                    {
+                        printf("rrb\n");
+                        rev_rotate(b);
+                    }
+                    push_to(a, b);
+                    printf("push a\n");
+
+                    n--;
+                }
+            }
+        }
+        // printf("Stack a: \n");
+        // display_stack(a);
+        // printf("Stack b: \n");
+        // display_stack(b);
+    }
+    // now we rot until top is largest:
+    while ((*a)->val != largest)
+    {
+        rotate(a);
+        printf("ra\n");
+
+    }
+    rotate(a);
+    printf("ra\n");
+
+}
+
+void push_swap(stack *a, stack *b, int n)
+{
+    int i;
+    int middle;
+
+    if (n <= 1)
+        return;
+    middle = (n + 1) / 2;
+    i = 1;
+    // push all except one:
+    while (++i <= n)
+    {
+        push_to(b, a);
+        printf("push a\n");
+    }
+    // push_swap(a,b, n-1);
+    // equivalent to pushing elemnt to stack b:
+    sort(a, b, n - 1);
 }
 
 int main(int argc, char **argv)
 {
     stack a = NULL;
-    // stack b = NULL;
+    stack b = NULL;
     //  dont forget to check for invalid arguments in the return val of stack_init:
     //  stack_init(&a, argc, &argv);
     int i;
@@ -301,7 +407,7 @@ int main(int argc, char **argv)
     while (--i >= 1)
         push(&a, atoi(argv[i]));
 
-    display_stack(&a);
+    // display_stack(&a);
 
     // push_to(&b, &a);
     // push_to(&b, &a);
@@ -313,7 +419,8 @@ int main(int argc, char **argv)
 
     // display_stack(&b);
 
-    a = push_swap(a, 6);
-    display_stack(&a);
+    // a = push_swap(a, 6);
+    push_swap(&a, &b, argc-1);
+    //display_stack(&a);
     return 0;
 }
