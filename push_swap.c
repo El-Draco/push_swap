@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <unistd.h>
+#include <io.h>
 #include <stdlib.h>
 #define true 1
 #define false 0
@@ -101,6 +101,7 @@ int is_empty(stack *s)
 
 void swap_first_two(stack *s)
 {
+    // goose
     struct node *temp;
 
     if (!*s || !(*s)->next)
@@ -141,19 +142,6 @@ void rev_rotate(stack *s)
     temp->next->next = *s;
     *s = temp->next;
     temp->next = NULL;
-}
-
-int stack_init(stack *s, int argc, char ***argv)
-{
-    int i;
-
-    i = argc - 1;
-    while (i >= 1)
-    {
-        push(s, atoi(*argv[i]));
-        i--;
-    }
-    return 0;
 }
 
 void push_to(stack *dest, stack *src)
@@ -284,6 +272,8 @@ stack actual_push_swap(stack a, int n)
 //         push_swap2((*a)->next, middle);
 // }
 
+// algo 1
+
 void sort(stack *a, stack *b, int n)
 {
     int i;
@@ -314,10 +304,10 @@ void sort(stack *a, stack *b, int n)
             {
                 largest = (*b)->val;
                 rotate(a);
-                write(1, "ra\n",4);
+                write(1, "ra\n", 4);
 
                 push_to(a, b);
-                write(1, "push a\n",8);
+                write(1, "push a\n", 8);
 
                 n--;
             }
@@ -369,11 +359,9 @@ void sort(stack *a, stack *b, int n)
     {
         rotate(a);
         write(1, "ra\n", 4);
-
     }
     rotate(a);
     write(1, "ra\n", 4);
-
 }
 
 void push_swap(stack *a, stack *b, int n)
@@ -396,6 +384,81 @@ void push_swap(stack *a, stack *b, int n)
     sort(a, b, n - 1);
 }
 
+void push_swap2(stack *a, stack *b, int n)
+{
+    int i;
+    int count;
+    struct node *ptr;
+    int b_c;
+
+    b_c = 0;
+    while (*a)
+    {
+        ptr = *b;
+        if (!ptr || (*a)->val > ptr->val)
+        {
+            push_to(b, a);
+            write(1, "pb\n", 4);
+        }
+        else
+        {
+            count = 0;
+            while (ptr && (*a)->val < ptr->val)
+            {
+                count++;
+                ptr = ptr->next;
+            }
+            i = 0;
+            if (!(*b)->next)
+            {
+                push_to(b, a);
+                write(1, "pb\n", 4);
+                swap_first_two(b);
+                write(1, "sb\n", 4);
+
+            }
+
+            else if (count <= b_c / 2)
+            {
+                while (++i <= count)
+                {
+                    rotate(b);
+                    write(1, "rb\n", 4);
+                } 
+                push_to(b, a);
+                write(1, "pb\n", 4);
+
+                i = 0;
+                while (++i <= count)
+                {
+                    rev_rotate(b);
+                    write(1, "rrb\n", 4);
+                }
+            }
+            // else
+            // {
+            //     while (++i <= b_c - count + 1)
+            //         rev_rotate(b);
+            //     push_to(b,a);
+            //     i = 0;
+            //     while (++i <= b_c - count + 2)
+            //         rotate(b);
+            // }
+        }
+        // printf("Stack a: \n");
+        // display_stack(a);
+        // printf("Stack b: \n");
+        // display_stack(b);
+        n--;
+        b_c++;
+    }
+    while (*b)
+    {
+        push_to(a, b);
+        write(1, "pa\n", 4);
+    }
+}
+
 int main(int argc, char **argv)
 {
     stack a = NULL;
@@ -404,46 +467,31 @@ int main(int argc, char **argv)
     //  stack_init(&a, argc, &argv);
     int i;
 
-    //i = argc;
-    //while (--i >= 1)
-    //    push(&a, atoi(argv[i]));
+    // i = argc;
+    // while (--i >= 1)
+    //     push(&a, atoi(argv[i]));
 
     int count = 0;
     int len = ft_strlen(argv[1]);
     int x;
     int j;
     char *s = argv[1];
-    i = 0;
-    while (i < len)
+    i = len - 1;
+
+    while (i >= 0)
     {
         j = i;
-        while (s[j] != ' ')
+        while (j >= 0 && s[j] != ' ')
+            j--;
+        if (j == -1)
             j++;
-        x = atoi(s+i);
-        i = j+1;
-        push(&b, x);
+        x = atoi(s + j);
+        i = j - 1;
+        push(&a, x);
     }
-    while (b)
-    {
-        push_to(&a,&b);
-    }
-    
-    //goose
-
-    // display_stack(&a);
-
-    // push_to(&b, &a);
-    // push_to(&b, &a);
-    // push_to(&b, &a);
-
+    push_swap2(&a, &b, count);
     // printf("\n\n");
-    // display_stack(&a);
-    // printf("\n\n");
-
-    // display_stack(&b);
-
-    // a = push_swap(a, 6);
-    //push_swap(&a, &b, argc-1);
     //display_stack(&a);
+
     return 0;
 }
