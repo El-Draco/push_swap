@@ -1,9 +1,9 @@
 #include <stdio.h>
-#include <unistd.h>
+#include <unistd.h.h>
 #include <stdlib.h>
 #define true 1
 #define false 0
-
+// goose
 int ft_strlen(char *s)
 {
     int i;
@@ -13,7 +13,7 @@ int ft_strlen(char *s)
         i++;
     return (i);
 }
-
+// goose
 struct node
 {
     int val;
@@ -39,7 +39,7 @@ void push(stack *s, int x)
         *s = temp;
     }
 }
-
+// goose
 void pop(stack *s)
 {
     struct node *temp;
@@ -64,10 +64,10 @@ void display_stack(stack *s)
         ptr = ptr->next;
     }
 }
-
-// void display_both(stack *a, stack *b)
-// {
-//     struct node *a_ptr,*b_ptr;
+// goose
+//  void display_both(stack *a, stack *b)
+//  {
+//      struct node *a_ptr,*b_ptr;
 
 //     a_ptr = *a;
 //     b_ptr = *b;
@@ -111,8 +111,8 @@ void swap_first_two(stack *s)
     temp->next = *s;
     *s = temp;
 }
-
-// shift up all elements by one:
+// goose
+//  shift up all elements by one:
 void rotate(stack *s)
 {
     struct node *temp;
@@ -127,8 +127,8 @@ void rotate(stack *s)
     ptr->next = temp;
     temp->next = NULL;
 }
-
-// shift down all elements by one:
+// goose
+//  shift down all elements by one:
 void rev_rotate(stack *s)
 {
     struct node *temp;
@@ -143,7 +143,7 @@ void rev_rotate(stack *s)
     *s = temp->next;
     temp->next = NULL;
 }
-
+// goose
 void push_to(stack *dest, stack *src)
 {
     struct node *temp;
@@ -384,6 +384,121 @@ void push_swap(stack *a, stack *b, int n)
     sort(a, b, n - 1);
 }
 
+void split(stack *a, stack *b, int n)
+{
+    int i;
+
+    i = 0;
+    if (n <= 1)
+        return;
+    while (i < n)
+    {
+        push_to(b, a);
+        i++;
+    }
+    split(a, b, n / 2);
+}
+
+void compare()
+{
+}
+
+void push_swap1(stack *a, stack *b, int n)
+{
+    int i;
+    int half;
+
+    // keep splitting until only one element left in a:
+    //if (n <= 1)
+    //    return;
+    //push_swap1(a, b, n / 2);
+    i = 0;
+    if (n <= 1)
+        return;
+    while (i < n-1)
+    {
+        push_to(b, a);
+        write(1, "pb\n", 4);
+        i++;
+    }
+    // note that we keep a ALWAYS sorted, b is merely a holder of remaining elements
+    struct node *ptr;
+    int count;
+    int pushed;
+
+    pushed = 0;
+    n = 1;
+
+    while (*b)
+    {
+        ptr = *a;
+        count = 0;
+
+        if (!*a || (*a)->val > (*b)->val)
+        {
+            push_to(a, b);
+            write(1, "pa\n", 4);
+        }
+        else
+        {
+            i = 0;
+            while (ptr && ptr->val < (*b)->val)
+            {
+                count++;
+                // push_to(a, b);
+                ptr = ptr->next;
+            }
+            // if count == n we have a special case
+            if (count == n)
+            {
+                push_to(a, b);
+                write(1, "pa\n", 4);
+                rotate(a);
+                write(1, "ra\n", 4);
+
+            }
+
+            // if count <= n / 2
+            else if (count <= n / 2)
+            {
+                while (++i <= count)
+                {
+                    rotate(a);
+                    write(1, "ra\n", 4);
+                }
+                push_to(a, b);
+                write(1, "pa\n", 4);
+                i = 0;
+                while (++i <= count)
+                {
+                    rev_rotate(a);
+                    write(1, "rra\n", 4);
+                }
+            }
+
+            // if count > n / 2
+            else
+            {
+                while (++i <= n - count)
+                {
+                    write(1, "rra\n", 4);
+                    rev_rotate(a);
+                }
+                push_to(a, b);
+                write(1, "pb\n", 4);
+                i = 0;
+                while (++i <= n - count)
+                {
+                    rotate(a);
+                    write(1, "ra\n", 4);
+                }
+            }
+        }
+        pushed++;
+        n++;
+    }
+}
+
 void push_swap2(stack *a, stack *b, int n)
 {
     int i;
@@ -416,7 +531,6 @@ void push_swap2(stack *a, stack *b, int n)
                 rotate(b);
                 write(1, "rb\n", 4);
             }
-
 
             else if (!(*b)->next)
             {
@@ -460,10 +574,6 @@ void push_swap2(stack *a, stack *b, int n)
                 }
             }
         }
-        // printf("Stack a: \n");
-        // display_stack(a);
-        // printf("Stack b: \n");
-        // display_stack(b);
         n--;
         b_c++;
     }
@@ -482,7 +592,6 @@ int main(int argc, char **argv)
     //  stack_init(&a, argc, &argv);
     int i;
 
-
     int count = 0;
     int len = ft_strlen(argv[1]);
     int x;
@@ -500,10 +609,11 @@ int main(int argc, char **argv)
         x = atoi(s + j);
         i = j - 1;
         push(&a, x);
+        count++;
     }
-    push_swap2(&a, &b, count);
+    push_swap1(&a, &b, count);
     // printf("\n\n");
     //display_stack(&a);
-
+    //
     return 0;
 }
