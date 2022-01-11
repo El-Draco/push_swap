@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <io.h>
+#include <unistd.h>
 #include <stdlib.h>
 #define true 1
 #define false 0
@@ -408,6 +408,7 @@ void push_swap2(stack *a, stack *b, int n)
                 count++;
                 ptr = ptr->next;
             }
+            i = 0;
             if (count == b_c)
             {
                 push_to(b, a);
@@ -416,8 +417,8 @@ void push_swap2(stack *a, stack *b, int n)
                 write(1, "rb\n", 4);
             }
 
-            i = 0;
-            if (!(*b)->next)
+
+            else if (!(*b)->next)
             {
                 push_to(b, a);
                 write(1, "pb\n", 4);
@@ -444,7 +445,7 @@ void push_swap2(stack *a, stack *b, int n)
             }
             else
             {
-                while (++i <= b_c - count + 1)
+                while (++i <= b_c - count)
                 {
                     write(1, "rrb\n", 4);
                     rev_rotate(b);
@@ -452,7 +453,7 @@ void push_swap2(stack *a, stack *b, int n)
                 push_to(b, a);
                 write(1, "pb\n", 4);
                 i = 0;
-                while (++i <= b_c - count + 2)
+                while (++i <= b_c - count)
                 {
                     rotate(b);
                     write(1, "rb\n", 4);
@@ -502,7 +503,7 @@ int main(int argc, char **argv)
     }
     push_swap2(&a, &b, count);
     // printf("\n\n");
-    // display_stack(&a);
+    //display_stack(&a);
 
     return 0;
 }
