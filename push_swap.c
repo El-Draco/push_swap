@@ -408,6 +408,14 @@ void push_swap2(stack *a, stack *b, int n)
                 count++;
                 ptr = ptr->next;
             }
+            if (count == b_c)
+            {
+                push_to(b, a);
+                write(1, "pa\n", 4);
+                rotate(b);
+                write(1, "rb\n", 4);
+            }
+
             i = 0;
             if (!(*b)->next)
             {
@@ -415,7 +423,6 @@ void push_swap2(stack *a, stack *b, int n)
                 write(1, "pb\n", 4);
                 swap_first_two(b);
                 write(1, "sb\n", 4);
-
             }
 
             else if (count <= b_c / 2)
@@ -424,7 +431,7 @@ void push_swap2(stack *a, stack *b, int n)
                 {
                     rotate(b);
                     write(1, "rb\n", 4);
-                } 
+                }
                 push_to(b, a);
                 write(1, "pb\n", 4);
 
@@ -435,15 +442,22 @@ void push_swap2(stack *a, stack *b, int n)
                     write(1, "rrb\n", 4);
                 }
             }
-            // else
-            // {
-            //     while (++i <= b_c - count + 1)
-            //         rev_rotate(b);
-            //     push_to(b,a);
-            //     i = 0;
-            //     while (++i <= b_c - count + 2)
-            //         rotate(b);
-            // }
+            else
+            {
+                while (++i <= b_c - count + 1)
+                {
+                    write(1, "rrb\n", 4);
+                    rev_rotate(b);
+                }
+                push_to(b, a);
+                write(1, "pb\n", 4);
+                i = 0;
+                while (++i <= b_c - count + 2)
+                {
+                    rotate(b);
+                    write(1, "rb\n", 4);
+                }
+            }
         }
         // printf("Stack a: \n");
         // display_stack(a);
@@ -467,9 +481,6 @@ int main(int argc, char **argv)
     //  stack_init(&a, argc, &argv);
     int i;
 
-    // i = argc;
-    // while (--i >= 1)
-    //     push(&a, atoi(argv[i]));
 
     int count = 0;
     int len = ft_strlen(argv[1]);
@@ -491,7 +502,7 @@ int main(int argc, char **argv)
     }
     push_swap2(&a, &b, count);
     // printf("\n\n");
-    //display_stack(&a);
+    // display_stack(&a);
 
     return 0;
 }
