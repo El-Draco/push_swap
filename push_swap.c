@@ -4,7 +4,7 @@
 #define true 1
 #define false 0
 // goose
-int ft_strlen(char *s)
+int ft_strlen(const char *s)
 {
     int i;
 
@@ -12,6 +12,13 @@ int ft_strlen(char *s)
     while (s[i])
         i++;
     return (i);
+}
+
+int ft_min(int *a, int *b)
+{
+    if (*a < *b)
+        return *a;
+    return *b;
 }
 // goose
 struct node
@@ -64,19 +71,6 @@ void display_stack(stack *s)
         ptr = ptr->next;
     }
 }
-// goose
-//  void display_both(stack *a, stack *b)
-//  {
-//      struct node *a_ptr,*b_ptr;
-
-//     a_ptr = *a;
-//     b_ptr = *b;
-//     while (ptr)
-//     {
-//         write("%d\n", ptr->val);
-//         ptr = ptr->next;
-//     }
-// }
 
 void clear_stack(stack *s)
 {
@@ -111,7 +105,6 @@ void swap_first_two(stack *s)
     temp->next = *s;
     *s = temp;
 }
-// goose
 //  shift up all elements by one:
 void rotate(stack *s)
 {
@@ -127,7 +120,6 @@ void rotate(stack *s)
     ptr->next = temp;
     temp->next = NULL;
 }
-// goose
 //  shift down all elements by one:
 void rev_rotate(stack *s)
 {
@@ -143,7 +135,6 @@ void rev_rotate(stack *s)
     *s = temp->next;
     temp->next = NULL;
 }
-// goose
 void push_to(stack *dest, stack *src)
 {
     struct node *temp;
@@ -156,121 +147,6 @@ void push_to(stack *dest, stack *src)
     // push(dest, (*src)->val);
     // pop(src);
 }
-
-// void sort_stack(stack *a, stack *b)
-// {
-//     int a_top;
-
-//     while (*a)
-//     {
-//         a_top = (*a)->val;
-//         if (*b == NULL || a_top < (*b)->val)
-//             push_to(b, a);
-//         else
-//         {
-//             pop(a);
-//             while (a_top > (*b)->val)
-//                 push_to(a, b);
-//             push(b, a_top);
-//         }
-//         *a = (*a)->next;
-//     }
-// }
-/*
-void merge_stacks(stack *a, int a_count, stack *b)
-{
-    int count;
-    int i;
-
-    count = 0;
-    if (!*a)
-        push_to(a, b);
-
-    while (*b)
-    {
-        i = -1;
-        while ((*a)->val < (*b)->val)
-            count++;
-
-        if (count < a_count / 2)
-        {
-            while (++i < count)
-                rev_rotate(a);
-            push_to(a, b);
-            i = -1;
-            while (++i < count)
-                rotate(a);
-        }
-        else if (count == 0)
-        {
-            push_to(a,b);
-        }
-
-        else
-        {
-            while (++i < count)
-                rotate(a);
-            push_to(a, b);
-            i = -1;
-            while (++i < count)
-                rev_rotate(a);
-        }
-
-        (*b) = (*b)->next;
-    }
-}
-
-void copy_stack(stack *dest, stack *src, int n)
-{
-    int i;
-
-    i = 0;
-}
-
-stack actual_push_swap(stack a, int n)
-{
-    struct node *b;
-    int half;
-    int i;
-
-    // here we duplicate stacks:
-
-    b = NULL;
-    // base case:
-    if (n > 1)
-    {
-        half = (n + 1) / 2;
-        i = 1;
-        // 1. push half elements to b:
-        while (i <= half)
-        {
-            push_to(&b, &a);
-            i++;
-        }
-        // stack temp = NULL;
-
-        push_swap(a, half);
-        push_swap(b, n - half);
-        merge_stacks(&a, half, &b);
-    }
-    return a;
-}
-*/
-
-// void push_swap(stack *a, int n)
-// {
-//     struct node *ptr;
-//     if (n <= 1)
-//         return;
-//     int middle;
-//     int i;
-
-//     i = 0;
-//     middle = (n + 1) / 2;
-//     while (++i <= middle)
-
-//         push_swap2((*a)->next, middle);
-// }
 
 // algo 1
 
@@ -364,7 +240,7 @@ void sort(stack *a, stack *b, int n)
     write(1, "ra\n", 4);
 }
 
-void push_swap(stack *a, stack *b, int n)
+void old_push_swap(stack *a, stack *b, int n)
 {
     int i;
     int middle;
@@ -384,34 +260,200 @@ void push_swap(stack *a, stack *b, int n)
     sort(a, b, n - 1);
 }
 
-void split(stack *a, stack *b, int n)
+
+void ft_strcpy(char *dest, char *src)
 {
     int i;
 
     i = 0;
-    if (n <= 1)
-        return;
-    while (i < n)
+    while (src[i])
     {
-        push_to(b, a);
+        dest[i] = src[i];
         i++;
     }
-    split(a, b, n / 2);
 }
 
-void compare()
+int	ft_strncmp(const char *s1, const char *s2, unsigned int n)
 {
+	unsigned int	i;
+
+	i = 0;
+	if (n == 0)
+		return (0);
+	while (s1[i] == s2[i] && s1[i] && s2[i] && i < n)
+		i++;
+	if (i == n)
+		i--;
+	return (((unsigned char)s1[i]) - ((unsigned char)s2[i]));
 }
+
+char	*ft_strjoin(char const *s1, char const *s2)
+{
+	int		i;
+	char	*temp;
+	int		l1;
+
+	if (!s1 || !s2)
+		return (NULL);
+	l1 = ft_strlen(s1);
+	i = 0;
+	temp = malloc(l1 + ft_strlen(s2) + 1);
+	if (!temp)
+		return (NULL);
+	while (s1[i])
+	{
+		temp[i] = s1[i];
+		i++;
+	}
+	i = 0;
+	while (s2[i])
+	{
+		temp[l1 + i] = s2[i];
+		i++;
+	}
+	temp[l1 + i] = 0;
+	return (temp);
+}
+
+void process_old_calls(char *s, int start, int end)
+{
+    int i;
+
+    if (start == end)
+        return ;
+    
+    //here we print chars from start index to end index:
+    i = start;
+    while (i <= end)
+    {
+        write(1,&s[i],1);
+        i++;
+    }
+
+    //here we delete all printed characters and reallocate memory:
+    char *temp;
+    temp = malloc(sizeof(char) *(1 + ft_strlen(s) -start - end));
+    ft_strcpy(temp,s);
+    free(s);
+    s = temp;
+}
+
+
+int are_they_redundant(char *f1, char *f2)
+{
+    int n;
+    int len;
+    
+    if (!f1 || !f2 || ft_strlen(f1) != ft_strlen(f2))
+        return false;
+        len = ft_strlen(f1);
+    if (ft_strncmp(f1, f2, len) == 1 || ft_strncmp(f1, f2, len) == -1)
+        return true;
+    return false;        
+}
+
+void delete_redundant_opers(char *hist, int start, int stop)
+{
+    int i;
+    char *temp;
+
+    i = 0;
+
+}
+
+void check_for_redundancies(char *hist)
+{
+    static char oper1[5];
+    static char oper2[5];
+    int start;
+    int end;
+    int i;
+
+    if (2)
+    {
+        //first fn call:
+        
+    }
+    i = 0;
+    start = 0;
+    end = 0;
+    //obtain first operation:
+    while (hist[i] && hist[i] != '\n')
+    {
+        oper1[i] = hist[i];
+        i++;
+    }
+    //count number of times operation appears consecutively:
+    int f1_count = 1;
+    i++;
+    int oper_len = ft_strlen(oper1);
+    while (hist[i] && ft_strncmp(oper1, hist+i, oper_len))
+    {
+        i += oper_len;
+        f1_count++;
+    }
+
+
+    //now we obtain the second operation if any:
+    while (hist[i] && hist[i] != '\n')
+    {
+        oper2[i] = hist[i];
+        i++;
+    }
+    //count number of times operation appears consecutively:
+    int f2_count = 1;
+    oper_len = ft_strlen(oper2);
+    i++;
+    while (hist[i] && ft_strncmp(oper1, hist+i, oper_len))
+    {
+        i += oper_len;
+        f2_count++;
+    }
+
+    if(are_they_redundant(oper1, oper2))
+    {
+        int del_count;
+        //we delete the redundant operations
+        del_count = ft_min(&f1_count, &f2_count);
+    }
+    else
+    {
+        process_old_calls(hist,0, end);
+    }
+}
+
+void fn_call_history(char *new_oper)
+{
+    int i;
+    static char *hist;
+    char *temp;
+
+    if (!hist)
+        hist = malloc(sizeof(char) * (1 + ft_strlen(new_oper)));
+    else
+    {
+        temp = malloc(sizeof(char) * (1 + ft_strlen(new_oper) + ft_strlen(hist)));
+        ft_strcpy(temp, hist);
+        free(hist);
+        hist = temp;
+    }
+    //concat new operation:    
+    while (new_oper)
+    {
+        hist[i] = new_oper[i];
+        i++;
+    }
+
+    //check for redundancies:
+    check_for_redundancies(hist);
+}
+
 
 void push_swap1(stack *a, stack *b, int n)
 {
     int i;
     int half;
 
-    // keep splitting until only one element left in a:
-    //if (n <= 1)
-    //    return;
-    //push_swap1(a, b, n / 2);
     i = 0;
     if (n <= 1)
         return;
@@ -485,7 +527,7 @@ void push_swap1(stack *a, stack *b, int n)
                     rev_rotate(a);
                 }
                 push_to(a, b);
-                write(1, "pb\n", 4);
+                write(1, "pa\n", 4);
                 i = 0;
                 while (++i <= n - count)
                 {
@@ -614,6 +656,8 @@ int main(int argc, char **argv)
     push_swap1(&a, &b, count);
     // printf("\n\n");
     //display_stack(&a);
+    //display_stack(&b);
+
     //
     return 0;
 }
