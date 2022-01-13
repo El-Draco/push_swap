@@ -97,7 +97,7 @@ void swap_first_two(stack *s)
 {
     // goose
     struct node *temp;
-
+    // printf("sa\n");
     if (!*s || !(*s)->next)
         return;
     temp = (*s)->next;
@@ -108,6 +108,7 @@ void swap_first_two(stack *s)
 //  shift up all elements by one:
 void rotate(stack *s)
 {
+    // printf("ra\n");
     struct node *temp;
     struct node *ptr;
     if (!*s || !(*s)->next)
@@ -123,6 +124,8 @@ void rotate(stack *s)
 //  shift down all elements by one:
 void rev_rotate(stack *s)
 {
+    // printf("rra\n");
+
     struct node *temp;
     struct node *ptr;
     // edge cases:
@@ -260,7 +263,6 @@ void old_push_swap(stack *a, stack *b, int n)
     sort(a, b, n - 1);
 }
 
-
 void ft_strcpy(char *dest, char *src)
 {
     int i;
@@ -273,46 +275,46 @@ void ft_strcpy(char *dest, char *src)
     }
 }
 
-int	ft_strncmp(const char *s1, const char *s2, unsigned int n)
+int ft_strncmp(const char *s1, const char *s2, unsigned int n)
 {
-	unsigned int	i;
+    unsigned int i;
 
-	i = 0;
-	if (n == 0)
-		return (0);
-	while (s1[i] == s2[i] && s1[i] && s2[i] && i < n)
-		i++;
-	if (i == n)
-		i--;
-	return (((unsigned char)s1[i]) - ((unsigned char)s2[i]));
+    i = 0;
+    if (n == 0)
+        return (0);
+    while (s1[i] == s2[i] && s1[i] && s2[i] && i < n)
+        i++;
+    if (i == n)
+        i--;
+    return (((unsigned char)s1[i]) - ((unsigned char)s2[i]));
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char *ft_strjoin(char const *s1, char const *s2)
 {
-	int		i;
-	char	*temp;
-	int		l1;
+    int i;
+    char *temp;
+    int l1;
 
-	if (!s1 || !s2)
-		return (NULL);
-	l1 = ft_strlen(s1);
-	i = 0;
-	temp = malloc(l1 + ft_strlen(s2) + 1);
-	if (!temp)
-		return (NULL);
-	while (s1[i])
-	{
-		temp[i] = s1[i];
-		i++;
-	}
-	i = 0;
-	while (s2[i])
-	{
-		temp[l1 + i] = s2[i];
-		i++;
-	}
-	temp[l1 + i] = 0;
-	return (temp);
+    if (!s1 || !s2)
+        return (NULL);
+    l1 = ft_strlen(s1);
+    i = 0;
+    temp = malloc(l1 + ft_strlen(s2) + 1);
+    if (!temp)
+        return (NULL);
+    while (s1[i])
+    {
+        temp[i] = s1[i];
+        i++;
+    }
+    i = 0;
+    while (s2[i])
+    {
+        temp[l1 + i] = s2[i];
+        i++;
+    }
+    temp[l1 + i] = 0;
+    return (temp);
 }
 
 void process_old_calls(char *s, int start, int end)
@@ -320,36 +322,35 @@ void process_old_calls(char *s, int start, int end)
     int i;
 
     if (start == end)
-        return ;
-    
-    //here we print chars from start index to end index:
+        return;
+
+    // here we print chars from start index to end index:
     i = start;
     while (i <= end)
     {
-        write(1,&s[i],1);
+        write(1, &s[i], 1);
         i++;
     }
 
-    //here we delete all printed characters and reallocate memory:
+    // here we delete all printed characters and reallocate memory:
     char *temp;
-    temp = malloc(sizeof(char) *(1 + ft_strlen(s) -start - end));
-    ft_strcpy(temp,s);
+    temp = malloc(sizeof(char) * (1 + ft_strlen(s) - start - end));
+    ft_strcpy(temp, s);
     free(s);
     s = temp;
 }
-
 
 int are_they_redundant(char *f1, char *f2)
 {
     int n;
     int len;
-    
+
     if (!f1 || !f2 || ft_strlen(f1) != ft_strlen(f2))
         return false;
-        len = ft_strlen(f1);
+    len = ft_strlen(f1);
     if (ft_strncmp(f1, f2, len) == 1 || ft_strncmp(f1, f2, len) == -1)
         return true;
-    return false;        
+    return false;
 }
 
 void delete_redundant_opers(char *hist, int start, int stop)
@@ -358,7 +359,6 @@ void delete_redundant_opers(char *hist, int start, int stop)
     char *temp;
 
     i = 0;
-
 }
 
 void check_for_redundancies(char *hist)
@@ -371,54 +371,52 @@ void check_for_redundancies(char *hist)
 
     if (2)
     {
-        //first fn call:
-        
+        // first fn call:
     }
     i = 0;
     start = 0;
     end = 0;
-    //obtain first operation:
+    // obtain first operation:
     while (hist[i] && hist[i] != '\n')
     {
         oper1[i] = hist[i];
         i++;
     }
-    //count number of times operation appears consecutively:
+    // count number of times operation appears consecutively:
     int f1_count = 1;
     i++;
     int oper_len = ft_strlen(oper1);
-    while (hist[i] && ft_strncmp(oper1, hist+i, oper_len))
+    while (hist[i] && ft_strncmp(oper1, hist + i, oper_len))
     {
         i += oper_len;
         f1_count++;
     }
 
-
-    //now we obtain the second operation if any:
+    // now we obtain the second operation if any:
     while (hist[i] && hist[i] != '\n')
     {
         oper2[i] = hist[i];
         i++;
     }
-    //count number of times operation appears consecutively:
+    // count number of times operation appears consecutively:
     int f2_count = 1;
     oper_len = ft_strlen(oper2);
     i++;
-    while (hist[i] && ft_strncmp(oper1, hist+i, oper_len))
+    while (hist[i] && ft_strncmp(oper1, hist + i, oper_len))
     {
         i += oper_len;
         f2_count++;
     }
 
-    if(are_they_redundant(oper1, oper2))
+    if (are_they_redundant(oper1, oper2))
     {
         int del_count;
-        //we delete the redundant operations
+        // we delete the redundant operations
         del_count = ft_min(&f1_count, &f2_count);
     }
     else
     {
-        process_old_calls(hist,0, end);
+        process_old_calls(hist, 0, end);
     }
 }
 
@@ -437,17 +435,30 @@ void fn_call_history(char *new_oper)
         free(hist);
         hist = temp;
     }
-    //concat new operation:    
+    // concat new operation:
     while (new_oper)
     {
         hist[i] = new_oper[i];
         i++;
     }
 
-    //check for redundancies:
+    // check for redundancies:
     check_for_redundancies(hist);
 }
 
+int sorted(stack *a)
+{
+    struct node *ptr;
+
+    ptr = *a;
+    while (ptr->next)
+    {
+        if (ptr->val > ptr->next->val)
+            return false;
+        ptr = ptr->next;
+    }
+    return true;
+}
 
 void push_swap1(stack *a, stack *b, int n)
 {
@@ -457,7 +468,7 @@ void push_swap1(stack *a, stack *b, int n)
     i = 0;
     if (n <= 1)
         return;
-    while (i < n-1)
+    while (i < n - 1)
     {
         push_to(b, a);
         write(1, "pb\n", 4);
@@ -497,7 +508,6 @@ void push_swap1(stack *a, stack *b, int n)
                 write(1, "pa\n", 4);
                 rotate(a);
                 write(1, "ra\n", 4);
-
             }
 
             // if count <= n / 2
@@ -626,6 +636,139 @@ void push_swap2(stack *a, stack *b, int n)
     }
 }
 
+void push_swap3(stack *a, stack *b, int n)
+{
+
+    while (!sorted(a))
+    {
+        if (!sorted(a) && (*a)->val < (*a)->next->val)
+        {
+            rotate(a);
+            write(1, "ra\n", 4);
+        }
+        else if ((*a)->val > (*a)->next->val)
+        {
+            swap_first_two(a);
+            write(1, "sa\n", 4);
+            if (!sorted(a))
+            {
+                rev_rotate(a);
+                write(1, "rra\n", 5);
+            }
+        }
+        // display_stack(a);
+        // printf("\n");
+    }
+}
+
+void sort_three(stack *a)
+{
+    struct node *ptr;
+
+    ptr = *a;
+    while (ptr && !sorted(a))
+    {
+        if (ptr->val > ptr->next->val)
+        {
+            swap_first_two(a);
+        }
+        ptr = ptr->next;
+        if (!(ptr->next))
+            ptr = *a;
+    }
+}
+
+void merge_sorted_chunks(stack *a, stack *b, int n)
+{
+    struct node *ptr;
+    int count;
+    int smallest;
+    int flag;
+    int i;
+
+    flag = 0;
+    ptr = *a;
+    smallest = ft_min(&(*a)->val, &(*b)->val);
+    while (*b)
+    {
+        if ((*b)->val < (*a)->val)
+        {
+            push_to(a, b);
+            write(1, "pa\n", 4);
+        }
+        else
+        {
+            ptr = *a;
+            count = 0;
+            while (ptr && ptr->val < (*b)->val && flag == 0)
+            {
+                count++;
+                ptr = ptr->next;
+                if (ptr && ptr->val == smallest)
+                    flag = 1;
+            }
+            
+            i = 0;
+            if (count == n)
+            {
+                push_to(a, b);
+                write(1, "pa\n", 4);
+
+                rotate(a);
+                write(1, "ra\n", 4);
+            }
+            else if (count <= n / 2)
+            {
+                while (i < count)
+                {
+                    rotate(a);
+                    write(1, "ra\n", 4);
+
+                    i++;
+                }
+                push_to(a, b);
+                write(1, "pa\n", 4);
+
+                rotate(a);
+                write(1, "ra\n", 4);
+            }
+        }
+        n++;
+    }
+    while (!sorted(a))
+    {
+        rotate(a);
+        write(1, "ra\n", 4);
+    }
+}
+
+void push_swap_Xnbs(stack *a, stack *b, int n)
+{
+    int i;
+
+    i = 0;
+    if (sorted(a) || n <= 3)
+    {
+        push_swap3(a,b,n);
+        return ;
+    }
+
+    while (i < n/2)
+    {
+        push_to(b, a);
+        write(1,"pb\n",4);
+        i++;
+    }
+    push_swap3(a, b, n);
+    push_swap3(b, a, n);
+    // display_stack(a);
+    //printf("\n\n");
+    // display_stack(b);
+
+    // now we merge:
+    merge_sorted_chunks(a, b, n - n/2);
+}
+
 int main(int argc, char **argv)
 {
     stack a = NULL;
@@ -653,10 +796,12 @@ int main(int argc, char **argv)
         push(&a, x);
         count++;
     }
-    push_swap1(&a, &b, count);
+    // sort_three(&a);
+    // push_swap3(&a, &b, count);
+    push_swap_Xnbs(&a, &b, count);
     // printf("\n\n");
-    //display_stack(&a);
-    //display_stack(&b);
+    display_stack(&a);
+    // display_stack(&b);
 
     //
     return 0;
