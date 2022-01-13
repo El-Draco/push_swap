@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <unistd.h>
+#include <io.h>
 #include <stdlib.h>
 #define true 1
 #define false 0
@@ -636,17 +636,33 @@ void push_swap2(stack *a, stack *b, int n)
     }
 }
 
+int get_smallest(stack *a)
+{
+    struct node *ptr;
+    int smallest;
+
+    smallest = (*a)->val;
+    ptr = *a;
+    while (ptr)
+    {
+        if (ptr->val < smallest)
+            smallest = ptr->val;
+        ptr = ptr->next;
+    }
+    return smallest;
+}
+
 void push_swap3(stack *a, stack *b, int n)
 {
-
+    int smallest = get_smallest(a);
     while (!sorted(a))
     {
-        if (!sorted(a) && (*a)->val < (*a)->next->val)
+        if ((*a)->val < (*a)->next->val)
         {
             rotate(a);
             write(1, "ra\n", 4);
         }
-        else if ((*a)->val > (*a)->next->val)
+        else if ((*a)->val > (*a)->next->val && (*a)->next->val != smallest)
         {
             swap_first_two(a);
             write(1, "sa\n", 4);
@@ -655,6 +671,11 @@ void push_swap3(stack *a, stack *b, int n)
                 rev_rotate(a);
                 write(1, "rra\n", 5);
             }
+        }
+        else
+        {
+            rotate(a);
+            write(1, "ra\n", 4);
         }
         // display_stack(a);
         // printf("\n");
@@ -800,7 +821,7 @@ int main(int argc, char **argv)
     // push_swap3(&a, &b, count);
     push_swap_Xnbs(&a, &b, count);
     // printf("\n\n");
-    display_stack(&a);
+    //display_stack(&a);
     // display_stack(&b);
 
     //
