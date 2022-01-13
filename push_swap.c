@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <io.h>
+#include <unistd.h>
 #include <stdlib.h>
 #define true 1
 #define false 0
