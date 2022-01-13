@@ -652,9 +652,26 @@ int get_smallest(stack *a)
     return smallest;
 }
 
+int get_largest(stack *a)
+{
+    struct node *ptr;
+    int largest;
+
+    largest = (*a)->val;
+    ptr = *a;
+    while (ptr)
+    {
+        if (ptr->val > largest)
+            largest = ptr->val;
+        ptr = ptr->next;
+    }
+    return largest;
+}
+
 void push_swap3(stack *a, stack *b, int n)
 {
     int smallest = get_smallest(a);
+    int largest = get_largest(a);
     while (!sorted(a))
     {
         if ((*a)->val < (*a)->next->val)
@@ -662,7 +679,7 @@ void push_swap3(stack *a, stack *b, int n)
             rotate(a);
             write(1, "ra\n", 4);
         }
-        else if ((*a)->val > (*a)->next->val && (*a)->next->val != smallest)
+        else if ((*a)->val > (*a)->next->val && (*a)->val != largest)
         {
             swap_first_two(a);
             write(1, "sa\n", 4);
