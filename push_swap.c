@@ -1,9 +1,8 @@
 #include <stdio.h>
-#include <unistd.h>
+#include <io.h>
 #include <stdlib.h>
 #define true 1
 #define false 0
-// goose
 int ft_strlen(const char *s)
 {
     int i;
@@ -20,7 +19,7 @@ int ft_min(int *a, int *b)
         return *a;
     return *b;
 }
-// goose
+
 struct node
 {
     int val;
@@ -46,7 +45,7 @@ void push(stack *s, int x)
         *s = temp;
     }
 }
-// goose
+
 void pop(stack *s)
 {
     struct node *temp;
@@ -679,7 +678,7 @@ void push_swap3(stack *a, stack *b, int n)
             rotate(a);
             write(1, "ra\n", 4);
         }
-        else if ((*a)->val > (*a)->next->val && (*a)->val != largest)
+        else if ((*a)->val > (*a)->next->val || ((*a)->val == largest && (*a)->next->val != smallest) || ((*a)->val != largest && (*a)->next->val == smallest))
         {
             swap_first_two(a);
             write(1, "sa\n", 4);
@@ -691,8 +690,8 @@ void push_swap3(stack *a, stack *b, int n)
         }
         else
         {
-            rotate(a);
-            write(1, "ra\n", 4);
+            rev_rotate(a);
+            write(1, "rra\n", 4);
         }
         // display_stack(a);
         // printf("\n");
@@ -701,18 +700,26 @@ void push_swap3(stack *a, stack *b, int n)
 
 void sort_three(stack *a)
 {
-    struct node *ptr;
+    //struct node *ptr;
 
-    ptr = *a;
-    while (ptr && !sorted(a))
+    //ptr = *a;
+    while (!sorted(a))
     {
-        if (ptr->val > ptr->next->val)
+        if ((*a)->val == get_largest(a))
+        {
+            write(1,"ra\n",4);
+            rotate(a);
+        }
+        else if ((*a)->val > (*a)->next->val)
         {
             swap_first_two(a);
+            write(1,"sa\n",4);
         }
-        ptr = ptr->next;
-        if (!(ptr->next))
-            ptr = *a;
+        else if ((*a)->val < (*a)->next->val && (*a)->next->val == get_largest(a))
+        {
+            rev_rotate(a);
+            write(1,"rra\n",5);
+        }
     }
 }
 
@@ -787,7 +794,7 @@ void push_swap_Xnbs(stack *a, stack *b, int n)
     i = 0;
     if (sorted(a) || n <= 3)
     {
-        push_swap3(a,b,n);
+        sort_three(a);
         return ;
     }
 
@@ -797,8 +804,11 @@ void push_swap_Xnbs(stack *a, stack *b, int n)
         write(1,"pb\n",4);
         i++;
     }
-    push_swap3(a, b, n);
-    push_swap3(b, a, n);
+    //push_swap3(a, b, n);
+    //push_swap3(b, a, n);
+    sort_three(a);
+    sort_three(b);
+    
     // display_stack(a);
     //printf("\n\n");
     // display_stack(b);
@@ -838,7 +848,7 @@ int main(int argc, char **argv)
     // push_swap3(&a, &b, count);
     push_swap_Xnbs(&a, &b, count);
     // printf("\n\n");
-    //display_stack(&a);
+    display_stack(&a);
     // display_stack(&b);
 
     //
