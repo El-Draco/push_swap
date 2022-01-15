@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <io.h>
+#include <unistd.h>
 #include <stdlib.h>
 #define true 1
 #define false 0
@@ -848,7 +848,7 @@ int main(int argc, char **argv)
     // push_swap3(&a, &b, count);
     push_swap_Xnbs(&a, &b, count);
     // printf("\n\n");
-    display_stack(&a);
+    //display_stack(&a);
     // display_stack(&b);
 
     //
